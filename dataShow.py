@@ -1,9 +1,9 @@
-import urllib
-import xmltodict
+from xml.etree.ElementTree import parse
+from urllib.request import urlopen
+from lxml import etree
 
-file = urllib.request.urlopen('https://www.predictit.org/api/marketdata/all')
-data = file.read()
-file.close()
-
-data = xmltodict.parse(data)
-data
+var_url = urlopen('https://www.predictit.org/api/marketdata/all')
+parser = etree.XMLParser(recover=True)
+xmldoc = parse(var_url, parser=parser)
+print(var_url)
+print(xmldoc)
