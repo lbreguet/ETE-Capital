@@ -1,14 +1,9 @@
-from urllib.request import urlopen
-import xml.etree.ElementTree as ET
-from xml.etree.ElementTree import parse
+import urllib
+import xmltodict
 
-var_url = urlopen('https://www.predictit.org/api/marketdata/all')
-xmldoc = parse(var_url, ET.XMLParser(encoding='utf-8'))
+file = urllib.request.urlopen('https://www.predictit.org/api/marketdata/all')
+data = file.read()
+file.close()
 
-for market in xmldoc.iterfind('MarketList/Markets/MarketData'):
-    name = market.findtext('Name')
-    contracts = market.findtext('Contracts')
-
-    print(name)
-    print(contracts)
-    print()
+data = xmltodict.parse(data)
+data
