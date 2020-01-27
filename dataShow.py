@@ -1,14 +1,50 @@
-from urllib.request import urlopen
+import os
 import xml.etree.ElementTree as ET
-from xml.etree.ElementTree import parse
 
-var_url = urlopen('https://www.predictit.org/api/marketdata/all')
-xmldoc = parse(var_url, ET.XMLParser(encoding='utf-8'))
+file_name = 'market_data.xml'
+full_file = os.path.abspath(os.path.join('data', file_name))
 
-for market in xmldoc.iterfind('MarketList/Markets/MarketData'):
-    name = market.findtext('Name')
-    contracts = market.findtext('Contracts')
+print(full_file)
 
-    print(name)
-    print(contracts)
-    print()
+dom = ET.parse(full_file)
+
+markets = dom.findall('Markets/MarketData')
+
+print('Markets:')
+
+for market in markets:
+ 
+    contracts = market.findall('Contracts/MarketContract')
+
+    if (len(contracts) >= 2):
+        name = market.find('Name')
+        status = market.find('Status')
+        print(name.text)
+        print(status.text)
+        print('Contracts:')
+
+        for contract in contracts:
+            cname = contract.find('Name')
+            cstatus = contract.find('Status')
+            last_trade_price = contract.find('LastTradePrice')
+            best_buy_yes_cost = contract.find('BestBuyYesCost')
+            best_buy_no_cost = contract.find('BestBuyNoCost')
+            best_sell_yes_cost = contract.find('BestSellYesCost')
+            best_sell_no_cost = contract.find('BestSellNoCost')
+            last_close_price = contract.find('LastClosePrice')
+
+            print(cname.text)
+            print(cstatus.text)
+            print("Last Trade Price: " + str(last_trade_price.text))
+            print("Best Buy Yes Cost: " + str(best_buy_yes_cost.text))
+            print("Best Buy No Cost: " + str(best_buy_no_cost.text))
+            print("Best Sell Yes Cost: " + str(best_sell_yes_cost.text))
+            print("Best Sell No Cost: " + str(best_sell_no_cost.text))
+            print("Last Close Price: " + str(last_close_price.text))
+            print()
+
+        print()
+        print()
+
+
+
