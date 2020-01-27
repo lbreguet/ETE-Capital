@@ -1,7 +1,14 @@
 import os
 import xml.etree.ElementTree as ET
+import requests
 
-file_name = 'market_data.xml'
+URL = 'https://www.predictit.org/api/marketdata/all'
+
+r = requests.get(URL)
+with open('data/data.xml', 'wb') as f:
+    f.write(r.content)
+
+file_name = 'data.xml'
 full_file = os.path.abspath(os.path.join('data', file_name))
 
 print(full_file)
