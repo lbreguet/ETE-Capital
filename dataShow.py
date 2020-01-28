@@ -1,57 +1,77 @@
+import json
+import numpy as np
 import os
-import xml.etree.ElementTree as ET
 import requests
 
-URL = 'https://www.predictit.org/api/marketdata/all'
 
-r = requests.get(URL)
-with open('data/data.xml', 'wb') as f:
-    f.write(r.content)
+def getMarkets():
+    
+    data = bytesToDict(saveAndLoad('data', 'data', readXML('https://www.predictit.org/api/marketdata/all')))
+    data = json.loads(data)
 
-file_name = 'data.xml'
-full_file = os.path.abspath(os.path.join('data', file_name))
+    return data['markets']
 
-print(full_file)
+def readXML(URL):
 
-dom = ET.parse(full_file)
+    r = requests.get(URL)
+    content = r.content
 
-markets = dom.findall('Markets/MarketData')
+    return content
 
-print('Markets:')
+def saveAndLoad(dir, name, dict):
 
-for market in markets:
- 
-    contracts = market.findall('Contracts/MarketContract')
+    os.mkdir(dir)
 
-    if (len(contracts) >= 2):
-        name = market.find('Name')
-        status = market.find('Status')
-        print(name.text)
-        print(status.text)
-        print('Contracts:')
+    pathname = dir + '/' + name + '.npy'
 
-        for contract in contracts:
-            cname = contract.find('Name')
-            cstatus = contract.find('Status')
-            last_trade_price = contract.find('LastTradePrice')
-            best_buy_yes_cost = contract.find('BestBuyYesCost')
-            best_buy_no_cost = contract.find('BestBuyNoCost')
-            best_sell_yes_cost = contract.find('BestSellYesCost')
-            best_sell_no_cost = contract.find('BestSellNoCost')
-            last_close_price = contract.find('LastClosePrice')
+    with open(pathname, 'wb') as f:
+        np.save(f, dict)
 
-            print(cname.text)
-            print(cstatus.text)
-            print("Last Trade Price: " + str(last_trade_price.text))
-            print("Best Buy Yes Cost: " + str(best_buy_yes_cost.text))
-            print("Best Buy No Cost: " + str(best_buy_no_cost.text))
-            print("Best Sell Yes Cost: " + str(best_sell_yes_cost.text))
-            print("Best Sell No Cost: " + str(best_sell_no_cost.text))
-            print("Last Close Price: " + str(last_close_price.text))
-            print()
+    with open(pathname, 'rb') as f:
+        return np.load(f, allow_pickle=True)
 
-        print()
-        print()
+def bytesToDict(data):
+    data = data.tolist()
+    return data.decode()
+
+def printData():
+
+    markets = getMarkets()
 
 
+    for market in markets:
+        
+        contracts = market['contracts']
 
+        if (len(contracts) >= 2):
+
+            name = market['name']
+            status = market['status']
+
+            print(name)
+            print(status)
+            print('Contracts:')
+            for contract in contracts:
+                cname = contract['name']
+                cstatus = contract['status']
+                last_trade_price = contract['lastTradePrice']
+                best_buy_yes_cost = contract['bestBuyYesCost']
+                best_buy_no_cost = contract['bestBuyNoCost']
+                best_sell_yes_cost = contract['bestSellYesCost']
+                best_sell_no_cost = contract['bestSellNoCost']
+                last_close_price = contract['lastClosePrice']
+
+                print(cname)
+                print(cstatus)
+                print("Last Trade Price: " + str(last_trade_price))
+                print("Best Buy Yes Cost: " + str(best_buy_yes_cost))
+                print("Best Buy No Cost: " + str(best_buy_no_cost))
+                print("Best Sell Yes Cost: " + str(best_sell_yes_cost))
+                print("Best Sell No Cost: " + str(best_sell_no_cost))
+                print("Last Close Price: " + str(last_close_price))
+                print()
+
+            print('----------------------------------')
+
+
+printData()
