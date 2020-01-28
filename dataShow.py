@@ -27,7 +27,6 @@ def printData(args):
     search = getopt.getopt(args, ':')
     searchString = ""
     searchString = searchString.join(search[1])
-    print(searchString)
 
     markets = getMarkets()
 
