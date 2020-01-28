@@ -6,7 +6,7 @@ import requests
 
 def getMarkets():
     
-    data = bytesToDict(saveAndLoad('data', 'data', readXML('https://www.predictit.org/api/marketdata/all')))
+    data = bytesToDict(saveAndLoad('data', 'market_data', readXML('https://www.predictit.org/api/marketdata/all')))
     data = json.loads(data)
 
     return data['markets']
