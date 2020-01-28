@@ -55,6 +55,24 @@ def printData(args):
                     best_sell_no_cost = contract['bestSellNoCost']
                     last_close_price = contract['lastClosePrice']
 
+                    if (last_trade_price is None):
+                        last_trade_price = 0.0
+
+                    if (best_buy_yes_cost is None):
+                        best_buy_yes_cost = 0.0
+
+                    if (best_buy_no_cost is None):
+                        best_buy_no_cost = 0.0
+
+                    if (best_sell_yes_cost is None):
+                        best_sell_yes_cost = 0.0
+
+                    if (best_sell_no_cost is None):
+                        best_sell_no_cost = 0.0
+
+                    if (last_close_price is None):
+                        last_close_price = 0.0
+
                     print(cname)
                     print(cstatus)
                     print("Last Trade Price: " + str(last_trade_price))
