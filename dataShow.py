@@ -19,16 +19,25 @@ def readXML(URL):
     return content
 
 def saveAndLoad(dir, name, dict):
+    if os.path.isdir(dir):
+        pathname = dir + '/' + name + '.npy'
 
-    os.mkdir(dir)
+        with open(pathname, 'wb') as f:
+            np.save(f, dict)
 
-    pathname = dir + '/' + name + '.npy'
+        with open(pathname, 'rb') as f:
+            return np.load(f, allow_pickle=True)
 
-    with open(pathname, 'wb') as f:
-        np.save(f, dict)
+    else:
+        os.mkdir(dir)
 
-    with open(pathname, 'rb') as f:
-        return np.load(f, allow_pickle=True)
+        pathname = dir + '/' + name + '.npy'
+
+        with open(pathname, 'wb') as f:
+            np.save(f, dict)
+
+        with open(pathname, 'rb') as f:
+            return np.load(f, allow_pickle=True)
 
 def bytesToDict(data):
     data = data.tolist()
@@ -69,8 +78,10 @@ def printData():
                 print("Best Sell Yes Cost: " + str(best_sell_yes_cost))
                 print("Best Sell No Cost: " + str(best_sell_no_cost))
                 print("Last Close Price: " + str(last_close_price))
+                
                 print()
-
+            
+            
             print('----------------------------------')
 
 
