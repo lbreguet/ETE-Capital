@@ -1,5 +1,7 @@
+import getopt
 import json
 import requests
+import sys
 
 
 def getMarkets():
@@ -20,7 +22,12 @@ def readXML(URL):
 def bytesToDict(data):
     return data.decode()
 
-def printData():
+def printData(args):
+
+    search = getopt.getopt(args, ':')
+    searchString = ""
+    searchString = searchString.join(search[1])
+    print(searchString)
 
     markets = getMarkets()
 
@@ -30,35 +37,37 @@ def printData():
         contracts = market['contracts']
 
         if (len(contracts) >= 2):
+            
+            if searchString in market['name']:
 
-            name = market['name']
-            status = market['status']
+                name = market['name']
+                status = market['status']
 
-            print(name)
-            print(status)
-            print('Contracts:')
-            for contract in contracts:
-                cname = contract['name']
-                cstatus = contract['status']
-                last_trade_price = contract['lastTradePrice']
-                best_buy_yes_cost = contract['bestBuyYesCost']
-                best_buy_no_cost = contract['bestBuyNoCost']
-                best_sell_yes_cost = contract['bestSellYesCost']
-                best_sell_no_cost = contract['bestSellNoCost']
-                last_close_price = contract['lastClosePrice']
+                print(name)
+                print(status)
+                print('Contracts:')
+                for contract in contracts:
+                    cname = contract['name']
+                    cstatus = contract['status']
+                    last_trade_price = contract['lastTradePrice']
+                    best_buy_yes_cost = contract['bestBuyYesCost']
+                    best_buy_no_cost = contract['bestBuyNoCost']
+                    best_sell_yes_cost = contract['bestSellYesCost']
+                    best_sell_no_cost = contract['bestSellNoCost']
+                    last_close_price = contract['lastClosePrice']
 
-                print(cname)
-                print(cstatus)
-                print("Last Trade Price: " + str(last_trade_price))
-                print("Best Buy Yes Cost: " + str(best_buy_yes_cost))
-                print("Best Buy No Cost: " + str(best_buy_no_cost))
-                print("Best Sell Yes Cost: " + str(best_sell_yes_cost))
-                print("Best Sell No Cost: " + str(best_sell_no_cost))
-                print("Last Close Price: " + str(last_close_price))
+                    print(cname)
+                    print(cstatus)
+                    print("Last Trade Price: " + str(last_trade_price))
+                    print("Best Buy Yes Cost: " + str(best_buy_yes_cost))
+                    print("Best Buy No Cost: " + str(best_buy_no_cost))
+                    print("Best Sell Yes Cost: " + str(best_sell_yes_cost))
+                    print("Best Sell No Cost: " + str(best_sell_no_cost))
+                    print("Last Close Price: " + str(last_close_price))
                 
-                print()
+                    print()
             
             
-            print('----------------------------------')
+                print('----------------------------------')
 
-printData()
+printData(sys.argv[1:])
