@@ -6,7 +6,7 @@ import requests
 
 def getMarkets():
     
-    data = bytesToDict(saveAndLoad('data', 'market_data', readXML('https://www.predictit.org/api/marketdata/all')))
+    data = bytesToDict(readXML('https://www.predictit.org/api/marketdata/all'))
     data = json.loads(data)
 
     return data['markets']
@@ -18,29 +18,8 @@ def readXML(URL):
 
     return content
 
-def saveAndLoad(dir, name, dict):
-    if os.path.isdir(dir):
-        pathname = dir + '/' + name + '.npy'
-
-        with open(pathname, 'wb') as f:
-            np.save(f, dict)
-
-        with open(pathname, 'rb') as f:
-            return np.load(f, allow_pickle=True)
-
-    else:
-        os.mkdir(dir)
-
-        pathname = dir + '/' + name + '.npy'
-
-        with open(pathname, 'wb') as f:
-            np.save(f, dict)
-
-        with open(pathname, 'rb') as f:
-            return np.load(f, allow_pickle=True)
 
 def bytesToDict(data):
-    data = data.tolist()
     return data.decode()
 
 def printData():
@@ -83,6 +62,5 @@ def printData():
             
             
             print('----------------------------------')
-
 
 printData()
