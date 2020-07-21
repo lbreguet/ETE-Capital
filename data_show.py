@@ -40,13 +40,17 @@ def to_xl():
     if (path.exists('markets.xlsx')):
         print('exists')
         workbook = load_workbook('markets.xlsx')
+    
         writer = pd.ExcelWriter('markets.xlsx', engine='openpyxl')
+        xl = pd.ExcelFile('markets.xlsx', engine='openpyxl')
         writer.book = workbook
-        writer.sheets = dict((ws.title, ws) for ws in writer.book.worksheets)
-        print(writer.book.worksheets[0].title)
-        print(writer.book.worksheets[0].max_row)
+        writer.sheets = {
+            ws.title:
+                ws for ws in writer.book.worksheets
+        }
         
         i = 0
+        print(len(writer.book.worksheets))
         for market in markets:
         
             contracts = market['contracts']
@@ -57,10 +61,17 @@ def to_xl():
             del df['image']
             del df['displayOrder']
             
-            
-            df.to_excel(writer, writer.book.worksheets[i].title, index=False, header=False, startrow=writer.book.worksheets[i].max_row)
-            i += 1
 
+            df_xl = xl.parse(writer.book.worksheets[i].title)
+            
+            df_new = pd.concat([df, df_xl])
+            df_new = df_new.sort_values(by=['shortName'])
+            print(df)
+            
+            df_new.to_excel(writer, writer.book.worksheets[i].title, index=False)
+            
+            i += 1
+        writer.save()
         writer.close()
     else:
         print('doesnt exist')
@@ -76,8 +87,9 @@ def to_xl():
             del df['image']
             del df['displayOrder']
             df.to_excel(writer, str(market['id']), index=False)
+            
 
-    
+        writer.save()
         writer.close()
 
         
