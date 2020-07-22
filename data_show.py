@@ -132,10 +132,6 @@ def create_charts():
                 
         writer.save()
         writer.close()
-    print("done")
-
-
-
 
 
 create_charts()

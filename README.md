@@ -221,7 +221,6 @@ def create_charts():
                 
         writer.save()
         writer.close()
-    print("done")
 ```
 The first we do is call the previous method to create the excel files and then we make a dictionary using all the file names as values:
 ```py
@@ -309,6 +308,7 @@ write-host "Running"
 [int] $hour = get-date -format HH
 while ($hour -gt 8 -or $hour -lt 17) {
 	py ./data_show.py;
+    write-host "Done"
 	start-sleep (60*1);
 	./run.ps1
 }
